@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Gudea:ital,wght@0,400;0,700;1,400&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+}
+
+body {
+    font-family: "Gudea", sans-serif;
+    background-color: #e4d4b6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* boutton menu */
+.carte-close{
+    height: 35px;
+    width: 35px;
+    border-radius: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(136, 136, 136);
+    cursor: pointer;
+    transition: 0.3s transform linear;
+    position: absolute;
+    z-index: 4;
+    top: 25px;
+    left: 25px;
+}
+
+.carte-close:hover{
+    transform: rotate(10deg);
+}
+
+.carte-close svg{
+    margin-top: 5px;
+    width: 30px;
+    height: 30px;
+    stroke: #fff;
+}
+
+.centre{
+    height: 500px;
+    width: 80%;
+    color: #fff;
+    border-radius: 7px;
+    background-color: rgb(136, 136, 136);
+    overflow: hidden;
+}
+
+.carte{
+    display: flex;
+}
+
+.centre .visuel{
+    height: 700px;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+.visuel .image{
+    height: 80%;
+    width: 80%;
+}
+
+.image img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.info{
+    margin: 20px
+}
+
+.info p{
+    margin: 10px 0px;
+}
