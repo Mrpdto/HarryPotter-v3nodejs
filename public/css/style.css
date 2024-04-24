@@ -1233,7 +1233,27 @@ form .boxEchanges.dark input{
     border-radius: 4px;
 }
 
-.tag .acquis{
+.fav{
+    position: absolute;
+    top: -5px;
+    right: -12px;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.5s;
+
+}
+
+.fav i{
+    font-size: 25px;
+    color: red;
+}
+
+/* .tag .acquis{
     padding: 2px 5px;
     color: #fff;
     background: rgba(60, 62, 59, 0.7);
@@ -1247,7 +1267,7 @@ form .boxEchanges.dark input{
     background: rgba(60, 62, 59, 0.7);
     border: 2px solid #535353;
     border-radius: 4px;
-}
+} */
 
 #bibliotheque img{
     height: 100%;

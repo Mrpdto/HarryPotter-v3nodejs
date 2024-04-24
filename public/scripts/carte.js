@@ -8,7 +8,6 @@ console.log(slug)
 async function fetchHarry() {
     const reponse = await fetch('https://hp-api.lainocs.fr/characters/'+ slug)
     const data = await reponse.json()
-    console.log(data);
     return data
 }
 
@@ -33,6 +32,27 @@ async function creerPage(){
     `;
 
     document.querySelector('.centre').appendChild(boite)
+
+    return api
 }
 
-creerPage()
+async function updateLastCard() {
+
+    const personnage = await creerPage()
+
+    const response = await fetch("/lastcard", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ 
+        lastHouseVisited: personnage.house  
+      }),
+  
+    });
+    const data = await response.json();
+    const card = data.message
+    console.log("house:", card);
+}
+
+updateLastCard()

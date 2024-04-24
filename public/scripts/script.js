@@ -5,12 +5,61 @@ async function fetchHarry() {
   return await reponse.json()
 }
 
+let filtreAll = document.querySelector(".filterAll")
+let filtreGry = document.querySelector(".filterGry")
+let filtreSerp = document.querySelector(".filterSerp")
+let filtreSerd = document.querySelector(".filterSerd")
+let filtrePouf = document.querySelector(".filterPouf")
+
+let rechercheInput = document.querySelector("#search");
+let rechercheResult = document.querySelector(".boite");
+
+
 // Se lance au chargement de la page
 // Permet de créer les cartes pour chaque perso de l'api
 async function creerCartes() {
-  const api = await fetchHarry()
-  console.log(api)
-  api.forEach(card => {
+  let api = await fetchHarry()
+  
+  let filteredApi;
+
+  
+
+  if (filtreGry.classList.contains("active")) {
+    let gryffindor = api.filter(card => card.house === "Gryffindor" || card.house === "Grynffindor" || card.house === "Grinffindor" || card.house === "Gyffindor");
+    filteredApi = gryffindor;
+    
+  }
+  if (filtreSerp.classList.contains("active")) {
+    let slytherin = api.filter(card => card.house === "Slytherin");
+    filteredApi = slytherin;
+  }
+  if (filtreSerd.classList.contains("active")) {
+    let ravenclaw = api.filter(card => card.house === "Ravenclaw");
+    filteredApi = ravenclaw;
+  }
+  if (filtrePouf.classList.contains("active")) {
+    let hufflepuff = api.filter(card => card.house === "Hufflepuff");
+    filteredApi = hufflepuff;
+  }
+
+  // If no filters are active, show all cards
+  if (filtreAll.classList.contains("active") && rechercheInput.value === "") {
+    filteredApi = api;
+  }
+
+  console.log(filteredApi);
+  document.querySelector(".boite").innerHTML = "";
+
+  rechercheInput.addEventListener("input", e =>{
+    rechercheResult.innerHTML = "";
+    const value = e.target.value.toLowerCase();
+    let barreRecherche = api.filter(card => card.name.toLowerCase().includes(value));
+    filteredApi = barreRecherche;
+    console.log(filteredApi);
+  })
+  console.log(filteredApi);
+  
+  filteredApi.forEach(card => {
     
     const cartePerso = document.createElement("div")
     cartePerso.className = "carte";
@@ -20,7 +69,7 @@ async function creerCartes() {
     cartePerso.innerHTML = `
     <div class="tag">
         <span class="${card.house ? card.house : "autre"}">${card.house ? card.house : "autre"}</span>
-        <span class=non-acquis>non-acquis</span>
+        <span class="fav"><i class="fa-regular fa-heart"></i></span>
     </div>
     <img src="${card.image}" alt="" draggable="false">
     <div class="carte-texte">
@@ -28,16 +77,32 @@ async function creerCartes() {
         <p class="acteur">${card.actor}</p>
     </div>
     `
+
+    let carteTexte = cartePerso.querySelector(".carte-texte");
+    let carteImage = cartePerso.querySelector("img");
     rechercheResult.appendChild(cartePerso)
 
     //quand on clique sur une carte: redirige vers une page de carte avec comme parametre le slug(l'api utilise slug et non l'id) pour avoir une page de carte du personnage sur lequel on a cliqué
-    cartePerso.addEventListener("click", function(){
+    carteTexte.addEventListener("click", function(){
+      window.location.href = "carte.html?slug=" + card.slug;
+    })
+    carteImage.addEventListener("click", function(){
       window.location.href = "carte.html?slug=" + card.slug;
     })
     
   });
 }
 
+
+
+
+//favoris btn
+// let favoris = document.querySelectorAll(".fav");
+// element.addEventListener("click", function(){
+//   favoris.forEach(element => {
+//     element.classList.toggle("fa-solid");
+//   })
+// });
 
 //Menu burger
 document.addEventListener("DOMContentLoaded", function () {
@@ -79,118 +144,13 @@ document.addEventListener("DOMContentLoaded",function (){
   })
 })
 
-//Connexion
-document.addEventListener("DOMContentLoaded", function (){
-  let connexionButton = document.querySelector("#connexionButton")
-  const connexionClose = document.querySelector(".close")
-  const connexion = document.querySelector(".container")
-  //ajoute un evenement quand on clic sur le boutton de connexion
-  connexionButton.addEventListener("click",function (){
-    connexion.classList.toggle("active");
-  })
-  //ajoute un evenement quand on clic sur l'icone de croix de la page de connexion
-  connexionClose.addEventListener("click",function (){
-    connexion.classList.toggle("active");
-  })
-})
 
-//Inscription
-{
-document.addEventListener("DOMContentLoaded", function (){
-  let incriptionButton = document.querySelector("#inscriptionButton");
-  const inscriptionClose = document.querySelector(".closeIncription");
-  const inscription = document.querySelector(".formInscription");
-  const formOverlay = document.querySelector(".form-overlay");
-  //ajoute un evenement quand on clic sur le boutton de inscription
-  incriptionButton.addEventListener("click",function (){
-    inscription.classList.toggle("active");
-    formOverlay.classList.toggle("active");
-  })
-  //ajoute un evenement quand on clic sur l'icone de croix de la page de inscription
-  inscriptionClose.addEventListener("click",function (event){
-    event.preventDefault();
-    inscription.classList.toggle("active");
-    formOverlay.classList.toggle("active");
-  })
-})
 
-let formInscription = document.querySelector(".formInscription");
-let formOverlay = document.querySelector(".form-overlay");
-let nom = document.querySelector("#nom");
-let pseudo = document.querySelector("#pseudo");
-let email = document.querySelector('#email');
-let passwordInput = document.querySelector("#password2");
-let form = document.querySelector("#form2");
+
+
 
 console.log(nom, pseudo)
 
-
-//interface affiche apres s'etre inscrit
-function nouvelleInterface(nom, email) {
-  if (theme=="light"){
-    formInscription.innerHTML = `
-    <div class="containerInscription">
-        <div class="headInscription">
-            <div class="titleInscription">Bienvenue ${nom}</div>
-            <div> Email enregistré : ${email}</div>
-            <div class="closeIncription">
-              <a href="index.html"><svg xmlns="http://www.w3.org/2000/svg" id="menu" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg> </a>
-            </div>
-        </div>
-    </div>
-      `
-  } else {
-    formInscription.innerHTML = `
-    <div class="containerInscription dark">
-        <div class="headInscription">
-            <div class="titleInscription formTexte dark">Bienvenue ${nom}</div>
-            <div class="formTexte dark"> Email enregistré : ${email}</div>
-            <div class="closeIncription dark">
-              <a href="index.html"><svg xmlns="http://www.w3.org/2000/svg" id="menu" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 dark">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg> </a>
-            </div>
-        </div>
-    </div>
-      `
-  }
-
-  let closeNouvelInterface = document.querySelector(".closeIncription")
-  closeNouvelInterface.addEventListener("click", function(event){
-    event.preventDefault();
-    formInscription.classList.toggle("active");
-    formOverlay.classList.toggle("active");
-  })
-  
-  formInscription.reset();
-
-}
-
-form.addEventListener('submit', e => {
-    e.preventDefault()
-    let nomRecup = nom.value
-    let emailRecup = email.value
-    form.remove()
-
-    nouvelleInterface(nomRecup, emailRecup)
-})
-
-//validite du mdp
-passwordInput.addEventListener('input', function () {
-  let passwordError = document.querySelector(".mdp");
-
-  let passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
-
-  if (passwordRegex.toLocaleString(passwordInput.value) && passwordInput.value.length >= 8){
-      passwordError.textContent="";
-  } else {
-      passwordError.textContent = "Le mot de passe doit contenir au moins une majuscule, une minuscule et un caractère spécial, et faire au moins 8 caractères de long.";
-  }
-})
-
-}
 
 // Dark Mode
 let theme = "light";
@@ -292,22 +252,11 @@ document.addEventListener("DOMContentLoaded", function (){
 
 
 //Barre de recherche (sans api)
-let rechercheInput = document.querySelector("#search");
-let rechercheResult = document.querySelector(".boite");
 
-rechercheInput.addEventListener('input', async function(e){
-  rechercheResult.innerHTML = '';
-  let filteredArray = dataArray.filter(personnage => personnage.nom.toLowerCase().startsWith(rechercheInput.value.toLowerCase()))
-  
-  if (rechercheInput.value) {
-    await creerCartes(filteredArray)
-  } else {
-    await creerCartes()
-  }
-  
-})
 
-creerCartes()
+
+
+creerCartes();
 
 
 
@@ -336,15 +285,32 @@ const filtreCarte = document.querySelectorAll('.carte');
 const estFiltreCarte = (e) =>{
   document.querySelector(".active").classList.remove("active");
   e.target.classList.add("active");
-  console.log(e.target)
+  // console.log(e.target)
 
-  filtreCarte.forEach(card => {
-    card.classList.add("hide");
+  // filtreCarte.forEach(card => {
+  //   card.classList.add("hide");
 
-    if (card.dataset.name === e.target.dataset.name || e.target.dataset.name === "tous"){
-      card.classList.remove("hide");
-    }
-  });
+  //   if (card.dataset.name === e.target.dataset.name || e.target.dataset.name === "tous"){
+  //     card.classList.remove("hide");
+  //   }
+  // });
 }
 
 filtreButton.forEach(button => button.addEventListener("click", estFiltreCarte))
+
+filtreAll.addEventListener("click", creerCartes);
+filtreGry.addEventListener("click", creerCartes);
+filtreSerp.addEventListener("click", creerCartes);
+filtreSerd.addEventListener("click", creerCartes);
+filtrePouf.addEventListener("click", creerCartes);
+
+
+async function getLastcard() {
+
+  const response = await fetch("/lastcard");
+  const data = await response.json();
+  const card = data.message
+  console.log("house:", card);
+}
+
+getLastcard()

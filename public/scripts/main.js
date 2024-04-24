@@ -10,7 +10,7 @@ const fetchUser = async () => {
     return;
   }
 
-  const response = await fetch(`http://127.0.0.1:3000/getMyProfile`, {
+  const response = await fetch(`/getMyProfile`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -36,9 +36,6 @@ const fetchUser = async () => {
 
   logout.addEventListener("click", () => {
     localStorage.removeItem("token");
-    if (!localStorage.getItem("token")) {
-      console.log("Token successfully removed");
-    }
     window.location.href = "/login.html";
   });
 };

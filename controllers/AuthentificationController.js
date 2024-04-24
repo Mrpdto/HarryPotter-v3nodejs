@@ -34,7 +34,7 @@ class AuthentificationController {
 
     try{
       const email = req.user.data;
-      console.log(req.user);
+      // console.log(req.user);
       const user = await prisma.user.findUnique({
         where: {
           email,
