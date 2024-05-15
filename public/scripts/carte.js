@@ -56,3 +56,8 @@ async function updateLastCard() {
 }
 
 updateLastCard()
+
+let close = document.querySelector(".carte-close")
+close.addEventListener("click", function(){
+    window.history.back()
+})

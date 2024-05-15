@@ -71,7 +71,6 @@ function creerCartes(cards) {
     cartePerso.innerHTML = `
     <div class="tag">
         <span class="${card.house ? card.house : "autre"}">${card.house ? card.house : "autre"}</span>
-        <span class="fav"><i class="fa-regular fa-heart"></i></span>
     </div>
     <img src="${card.image}" alt="" draggable="false">
     <div class="carte-texte">
@@ -87,7 +86,7 @@ function creerCartes(cards) {
 }
 
 // Function for the search input.
-rechercheInput.addEventListener('input', (e) => {
+rechercheInput?.addEventListener('input', (e) => {
 
   // Put all the cards hidden
   const allCards =  document.querySelectorAll('.carte');
@@ -106,7 +105,7 @@ rechercheInput.addEventListener('input', (e) => {
     if(newArray.length > 0) {
       for (let i = 0; i < newArray.length; i++) {
         const cardFiltered = document.querySelector(`[data-name="${newArray[i].name}"]`);
-        cardFiltered.classList.remove('hidden');
+        cardFiltered?.classList.remove('hidden');
       }
     }
 
@@ -140,7 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
     mobileOverlay.classList.toggle("active");
   });
   //ajoute un evenement quand on clic sur l'overlay
-  mobileOverlay.addEventListener("click", function () {
+  mobileOverlay?.addEventListener("click", function () {
     //bascule la clsse 'active' pour affiche/masquer le menu de navigation et l'overlay
     navMobile.classList.toggle("active");
     mobileOverlay.classList.toggle("active");
@@ -152,10 +151,10 @@ document.addEventListener("DOMContentLoaded",function (){
   let btnFlottant = document.querySelector(".btnFlottant")
   let echangeForm = document.querySelector(".echangeForm")
   let closeEchanges = document.querySelector(".closeEchanges")
-  btnFlottant.addEventListener("click",function(){
+  btnFlottant?.addEventListener("click",function(){
     echangeForm.classList.toggle("active");
   })
-  closeEchanges.addEventListener("click", function(){
+  closeEchanges?.addEventListener("click", function(){
     echangeForm.classList.toggle("active");
   })
 })
@@ -265,13 +264,13 @@ let filtres = document.querySelector(".cartes-filtres");
 let barreRecherche = document.querySelector(".barre-recherche")
 let barreLabel = document.querySelector(".barre-recherche label")
 
-barreLabel.addEventListener("click", function(){
+barreLabel?.addEventListener("click", function(){
   filtres.classList.toggle("activ");
   filtreEntree.classList.toggle("activ");
   barreRecherche.classList.toggle("active");
 })
 
-filtreEntree.addEventListener("click", function(){
+filtreEntree?.addEventListener("click", function(){
   filtres.classList.toggle("activ");
   filtreEntree.classList.toggle("activ");
   barreRecherche.classList.toggle("active");
@@ -291,8 +290,9 @@ async function getLastcard() {
 (async () => {
   
   const cards = await fetchHarry()
-  console.log(cards);
-  creerCartes(cards)  
+  if (window.location.pathname === "/index.html") {
+    creerCartes(cards)  
+  }
   
 })();
 

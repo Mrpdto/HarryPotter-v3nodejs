@@ -5,18 +5,16 @@ const token = localStorage.getItem("token");
 const btnBooster = document.getElementById("btnBooster");
 
 // Event Delegation
-document.addEventListener('click', (e) => {
+document.addEventListener('click', async (e) => {
 
   const target = e.target;
 
   if (target.id === 'logout') {
     localStorage.removeItem("token");
     window.location.href = "/login.html";
+  } else if (target.matches("#btnBooster")) {
+    await openBooster()
   }
-})
-
-btnBooster.addEventListener('click', async () => {
-  await openBooster()
 })
 
 const fetchUser = async () => {
@@ -101,11 +99,11 @@ function showUserCards(cards, total) {
 
   cards.forEach(card => {
     
-    const cardData = dataArray.find(el => el.id === card.cardId)
+    const cardData = dataArray.find(el => el.id === card.cardId) 
 
     const cartePerso = document.createElement("div")
     cartePerso.classList.add("carte");
-    cartePerso.setAttribute('data-house', cardData.house)
+    cartePerso.setAttribute('data-house', cardData.house ? cardData.house : "sdf")
     cartePerso.setAttribute('data-name', cardData.name)
     cartePerso.setAttribute('slug', cardData.slug)
   
@@ -139,7 +137,9 @@ function updateProfile(user) {
     element.textContent = user.email;
   });
 
-  boosterTimer(user.nextBooster)
+  if (document.getElementById("btnBooster")) {
+    boosterTimer(user.nextBooster)
+  }
 
 }
 
@@ -170,10 +170,12 @@ function boosterTimer(timerBooster) {
 
 
 (async () => {
-
   const user = await fetchUser();
   updateProfile(user)
-  const { cards, total } = await fetchCards();
-  showUserCards(cards, total)
+
+  if (window.location.pathname === "/collection.html") {
+    const { cards, total } = await fetchCards();
+    showUserCards(cards, total)
+  }
 
 })();
