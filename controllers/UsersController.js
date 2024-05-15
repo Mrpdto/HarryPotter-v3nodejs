@@ -1,5 +1,7 @@
 const prisma = require("../config/prisma");
 const { hashPassword, comparePassword } = require("../utils/bcrypt");
+const { generateAccessToken } = require("../utils/jwt");
+
 class UsersController {
   async index(req, res) {
     try {
@@ -21,9 +23,18 @@ class UsersController {
         data:{
           ...body,
           password: encryptedPassword,
-        } ,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          booster: true,
+        }
       });
-      return res.status(201).json(user);
+
+      const token = generateAccessToken(user.email);
+
+      return res.status(201).json({user, token});
     } catch (e) {
       return res.status(500).json({ message: e.message });
     }

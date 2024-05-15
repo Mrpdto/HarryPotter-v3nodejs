@@ -20,11 +20,17 @@ function authenticateToken(req, res, next) {
       where: {
         email,
       },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        booster: true,
+      }
     });
 
     if (!user) return res.sendStatus(403);
 
-    req.user = payload;
+    req.user = user;
 
     next();
   });

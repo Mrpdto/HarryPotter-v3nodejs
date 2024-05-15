@@ -33,17 +33,23 @@ class AuthentificationController {
   async getMyProfile(req, res) {
 
     try{
-      const email = req.user.data;
+      const email = req.user.email;
       // console.log(req.user);
       const user = await prisma.user.findUnique({
         where: {
           email,
+        },
+        select: {
+          name: true,
+          email: true,
+          booster: true,
         },
       });
 
       return res.status(200).json({
         name: user.name,
         email: user.email,
+        nextBooster: user.booster,
       });
     }
     catch(e){

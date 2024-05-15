@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/login.css">
-    <title>Document</title>
+    <title>S'inscrire</title>
 </head>
 <body>
     <div class="login-container">
-        <h2>Connexion</h2>
+        <h2>S'inscrire</h2>
         <form action="#" method="post" id="inscription-form">
+          <div class="input-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
           <div class="input-group">
             <label for="email">email</label>
             <input type="text" id="email" name="email" required>
@@ -18,7 +22,8 @@
             <label for="password">Mot de passe :</label>
             <input type="password" id="password" name="password" required>
           </div>
-          <button type="submit" class="login-button">Se Connecter</button>
+          <input type="hidden" name="signup">
+          <button type="submit" class="login-button">S'inscrire</button>
         </form>
       </div>
 

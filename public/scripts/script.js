@@ -8,7 +8,7 @@ let dataArray = [];
 document.addEventListener('click', (e) => {
 
   const target = e.target;
-
+  
   if (target.matches(".filterBtn")) {
 
     const isActive = document.querySelector(".filterBtn.active");
@@ -41,8 +41,8 @@ document.addEventListener('click', (e) => {
 
     }
 
-  } else if (target.matches('.carte')) {
-    const slug = target.getAttribute('slug');
+  } else if (target.closest('.carte')) {
+    const slug = target.closest('.carte').getAttribute('slug');
     window.location.href = "carte.html?slug=" + slug;
   }
 
