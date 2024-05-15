@@ -2,6 +2,18 @@ const title = document.querySelectorAll(".userName");
 const email = document.querySelectorAll(".userEmail");
 const logout = document.getElementById("logout");
 
+// Event Delegation
+document.addEventListener('click', (e) => {
+
+  const target = e.target;
+
+  if (target.id === 'logout') {
+    localStorage.removeItem("token");
+    window.location.href = "/login.html";
+  }
+})
+
+
 const fetchUser = async () => {
   const token = localStorage.getItem("token");
 
@@ -34,10 +46,10 @@ const fetchUser = async () => {
     element.innerHTML = user.email;
   });
 
-  logout.addEventListener("click", () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login.html";
-  });
 };
 
-fetchUser();
+(async () => {
+
+  await fetchUser();
+
+})();

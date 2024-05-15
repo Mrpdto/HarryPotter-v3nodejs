@@ -1180,7 +1180,7 @@ form .boxEchanges.dark input{
     transition: 0.5s;
 }
 
-.carte.hide{
+.carte.hidden{
     display: none;
 }
 

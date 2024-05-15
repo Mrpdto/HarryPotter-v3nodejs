@@ -1,70 +1,72 @@
 "use strict";
 
-async function fetchHarry() {
-  const reponse = await fetch('https://hp-api.lainocs.fr/characters')
-  return await reponse.json()
-}
-
-let filtreAll = document.querySelector(".filterAll")
-let filtreGry = document.querySelector(".filterGry")
-let filtreSerp = document.querySelector(".filterSerp")
-let filtreSerd = document.querySelector(".filterSerd")
-let filtrePouf = document.querySelector(".filterPouf")
-
 let rechercheInput = document.querySelector("#search");
 let rechercheResult = document.querySelector(".boite");
+let dataArray = [];
+
+
+document.addEventListener('click', (e) => {
+
+  const target = e.target;
+
+  if (target.matches(".filterBtn")) {
+
+    const isActive = document.querySelector(".filterBtn.active");
+
+    if (isActive && isActive !== target) {
+
+      // On rend actif le filtre 
+      isActive.classList.remove("active");
+      target.classList.add("active");
+
+      // On récupère la maison
+      const filter = target.getAttribute("data-filter").toLowerCase();
+      console.log(filter);
+      const allCards = document.querySelectorAll('.carte');
+
+      if (filter.toLowerCase() === "all") {
+        allCards.forEach(card => {
+          card.classList.remove("hidden");
+        })
+
+      } else {
+        allCards.forEach(card => {
+          if (card.getAttribute('data-house').toLowerCase() === filter) {
+            card.classList.remove("hidden");
+          } else {
+            card.classList.add("hidden");
+          }
+        })
+      }
+
+    }
+
+  } else if (target.matches('.carte')) {
+    const slug = target.getAttribute('slug');
+    window.location.href = "carte.html?slug=" + slug;
+  }
+
+})
+
+
+async function fetchHarry() {
+  const reponse = await fetch('https://hp-api.lainocs.fr/characters')
+  dataArray = await reponse.json()
+  return dataArray;
+}
 
 
 // Se lance au chargement de la page
 // Permet de créer les cartes pour chaque perso de l'api
-async function creerCartes() {
-  let api = await fetchHarry()
-  
-  let filteredApi;
-
-  
-
-  if (filtreGry.classList.contains("active")) {
-    let gryffindor = api.filter(card => card.house === "Gryffindor" || card.house === "Grynffindor" || card.house === "Grinffindor" || card.house === "Gyffindor");
-    filteredApi = gryffindor;
-    
-  }
-  if (filtreSerp.classList.contains("active")) {
-    let slytherin = api.filter(card => card.house === "Slytherin");
-    filteredApi = slytherin;
-  }
-  if (filtreSerd.classList.contains("active")) {
-    let ravenclaw = api.filter(card => card.house === "Ravenclaw");
-    filteredApi = ravenclaw;
-  }
-  if (filtrePouf.classList.contains("active")) {
-    let hufflepuff = api.filter(card => card.house === "Hufflepuff");
-    filteredApi = hufflepuff;
-  }
-
-  // If no filters are active, show all cards
-  if (filtreAll.classList.contains("active") && rechercheInput.value === "") {
-    filteredApi = api;
-  }
-
-  console.log(filteredApi);
-  document.querySelector(".boite").innerHTML = "";
-
-  rechercheInput.addEventListener("input", e =>{
-    rechercheResult.innerHTML = "";
-    const value = e.target.value.toLowerCase();
-    let barreRecherche = api.filter(card => card.name.toLowerCase().includes(value));
-    filteredApi = barreRecherche;
-    console.log(filteredApi);
-  })
-  console.log(filteredApi);
-  
-  filteredApi.forEach(card => {
+function creerCartes(cards) {
+      
+  cards.forEach(card => {
     
     const cartePerso = document.createElement("div")
-    cartePerso.className = "carte";
-    cartePerso.setAttribute('data-name', card.house)
-    cartePerso.setAttribute('slug',card.slug)
+    cartePerso.classList.add("carte");
+    cartePerso.setAttribute('data-house', card.house)
+    cartePerso.setAttribute('data-name', card.name)
+    cartePerso.setAttribute('slug', card.slug)
   
     cartePerso.innerHTML = `
     <div class="tag">
@@ -78,31 +80,45 @@ async function creerCartes() {
     </div>
     `
 
-    let carteTexte = cartePerso.querySelector(".carte-texte");
-    let carteImage = cartePerso.querySelector("img");
     rechercheResult.appendChild(cartePerso)
-
-    //quand on clique sur une carte: redirige vers une page de carte avec comme parametre le slug(l'api utilise slug et non l'id) pour avoir une page de carte du personnage sur lequel on a cliqué
-    carteTexte.addEventListener("click", function(){
-      window.location.href = "carte.html?slug=" + card.slug;
-    })
-    carteImage.addEventListener("click", function(){
-      window.location.href = "carte.html?slug=" + card.slug;
-    })
     
   });
+
 }
 
+// Function for the search input.
+rechercheInput.addEventListener('input', (e) => {
 
+  // Put all the cards hidden
+  const allCards =  document.querySelectorAll('.carte');
+  allCards.forEach(card => {
+    card.classList.add('hidden');
+  });
 
+  // then get the search value in lowercase to use it for the filter (we remove the whites spaces too)
+  const searchValue =  e.target.value.toLowerCase().replace(/\s/g, "");
 
-//favoris btn
-// let favoris = document.querySelectorAll(".fav");
-// element.addEventListener("click", function(){
-//   favoris.forEach(element => {
-//     element.classList.toggle("fa-solid");
-//   })
-// });
+  // if not empty, let's filter !
+  if(searchValue) {
+    let newArray = dataArray.filter(perso => perso.name.toLowerCase().startsWith(searchValue.toLowerCase()));
+    
+    // looking for the card
+    if(newArray.length > 0) {
+      for (let i = 0; i < newArray.length; i++) {
+        const cardFiltered = document.querySelector(`[data-name="${newArray[i].name}"]`);
+        cardFiltered.classList.remove('hidden');
+      }
+    }
+
+  // if the search value is empty, put all cards visible. 
+  } else {
+    allCards.forEach(card => {
+      card.classList.remove('hidden');
+    })
+  }
+  
+  
+})
 
 //Menu burger
 document.addEventListener("DOMContentLoaded", function () {
@@ -143,13 +159,6 @@ document.addEventListener("DOMContentLoaded",function (){
     echangeForm.classList.toggle("active");
   })
 })
-
-
-
-
-
-
-console.log(nom, pseudo)
 
 
 // Dark Mode
@@ -250,16 +259,6 @@ document.addEventListener("DOMContentLoaded", function (){
 
 })
 
-
-//Barre de recherche (sans api)
-
-
-
-
-creerCartes();
-
-
-
 //Filtre (sans api)
 let filtreEntree = document.querySelector(".filtre-btn");
 let filtres = document.querySelector(".cartes-filtres");
@@ -279,38 +278,22 @@ filtreEntree.addEventListener("click", function(){
 })
 
 
-const filtreButton = document.querySelectorAll('.cartes-filtres button');
-const filtreCarte = document.querySelectorAll('.carte');
-
-const estFiltreCarte = (e) =>{
-  document.querySelector(".active").classList.remove("active");
-  e.target.classList.add("active");
-  // console.log(e.target)
-
-  // filtreCarte.forEach(card => {
-  //   card.classList.add("hide");
-
-  //   if (card.dataset.name === e.target.dataset.name || e.target.dataset.name === "tous"){
-  //     card.classList.remove("hide");
-  //   }
-  // });
-}
-
-filtreButton.forEach(button => button.addEventListener("click", estFiltreCarte))
-
-filtreAll.addEventListener("click", creerCartes);
-filtreGry.addEventListener("click", creerCartes);
-filtreSerp.addEventListener("click", creerCartes);
-filtreSerd.addEventListener("click", creerCartes);
-filtrePouf.addEventListener("click", creerCartes);
-
-
 async function getLastcard() {
 
   const response = await fetch("/lastcard");
   const data = await response.json();
   const card = data.message
-  console.log("house:", card);
+  // console.log("house:", card);
 }
+
+
+// IIFE : Immediately Invoked Function Expression 
+(async () => {
+  
+  const cards = await fetchHarry()
+  console.log(cards);
+  creerCartes(cards)  
+  
+})();
 
 getLastcard()
